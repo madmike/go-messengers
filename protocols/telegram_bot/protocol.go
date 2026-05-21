@@ -69,6 +69,7 @@ func (p *Protocol) Capabilities() []core.Capability {
 		core.CapabilityFiles,
 		core.CapabilityReactions,
 		core.CapabilityEditDelete,
+		core.CapabilityPresence,
 	}
 }
 

@@ -27,11 +27,23 @@ func (p *Protocol) Send(ctx context.Context, msg core.OutgoingMessage) (*core.Se
 	if msg.Action != "" && strings.TrimSpace(msg.Text) == "" && len(msg.Buttons) == 0 {
 		if msg.Action == "typing" {
 			peer, pErr := parseInputPeer(msg.ChatID)
-			if pErr == nil {
-				_, _ = c.API().MessagesSetTyping(ctx, &tg.MessagesSetTypingRequest{
-					Peer:   peer,
-					Action: &tg.SendMessageTypingAction{},
-				})
+			if pErr != nil {
+				p.logger.Warn("telegram_userbot: failed to parse chat ID for typing action",
+					telemetry.String("chat_id", msg.ChatID),
+					telemetry.Err(pErr))
+				return &core.SentMessage{ChatID: msg.ChatID}, nil
+			}
+			_, typingErr := c.API().MessagesSetTyping(ctx, &tg.MessagesSetTypingRequest{
+				Peer:   peer,
+				Action: &tg.SendMessageTypingAction{},
+			})
+			if typingErr != nil {
+				p.logger.Warn("telegram_userbot: failed to send typing indicator",
+					telemetry.String("chat_id", msg.ChatID),
+					telemetry.Err(typingErr))
+			} else {
+				p.logger.Debug("telegram_userbot: typing indicator sent",
+					telemetry.String("chat_id", msg.ChatID))
 			}
 		}
 		return &core.SentMessage{ChatID: msg.ChatID}, nil

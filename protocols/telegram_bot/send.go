@@ -25,7 +25,10 @@ func (p *Protocol) Send(ctx context.Context, msg core.OutgoingMessage) (*core.Se
 	}
 
 	if msg.Action != "" {
-		return nil, p.sendChatAction(ctx, msg.ChatID, msg.Action, msg.ThreadID)
+		if err := p.sendChatAction(ctx, msg.ChatID, msg.Action, msg.ThreadID); err != nil {
+			return nil, fmt.Errorf("send chat action: %w", err)
+		}
+		return &core.SentMessage{ChatID: msg.ChatID}, nil
 	}
 
 	// No attachments → plain text.

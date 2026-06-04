@@ -92,4 +92,4 @@ external account id for cloud API) lives in `messenger_accounts`. Chat
 metadata (for hierarchy + subscriber tracking) will live in a `chats` table
 with a self-referencing `parent_chat_id`.
 
-See `supabase/migrations/20260130000001_tenants_and_assistants.sql`.
+See `db/migrations/20260130000001_tenants_and_assistants.sql`.

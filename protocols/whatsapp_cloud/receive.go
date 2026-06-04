@@ -56,7 +56,7 @@ func (h *webhookHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// Meta's verification handshake: echoes hub.challenge if verify_token matches.
 		if r.URL.Query().Get("hub.mode") == "subscribe" &&
 			r.URL.Query().Get("hub.verify_token") == h.protocol.verifyToken {
-			w.Write([]byte(r.URL.Query().Get("hub.challenge")))
+			_, _ = w.Write([]byte(r.URL.Query().Get("hub.challenge")))
 			return
 		}
 		http.Error(w, "forbidden", http.StatusForbidden)
@@ -418,7 +418,7 @@ func parseUnixString(s string) time.Time {
 		return time.Now()
 	}
 	var secs int64
-	fmt.Sscanf(s, "%d", &secs)
+	_, _ = fmt.Sscanf(s, "%d", &secs)
 	if secs == 0 {
 		return time.Now()
 	}

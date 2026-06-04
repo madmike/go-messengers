@@ -125,7 +125,8 @@ func (p *Protocol) Delete(ctx context.Context, chatID, messageID string) error {
 		return fmt.Errorf("whatsapp_userbot: invalid chat JID %q: %w", chatID, err)
 	}
 
-	if _, err := c.RevokeMessage(ctx, chatJID, types.MessageID(messageID)); err != nil {
+	revokeMsg := c.BuildRevoke(chatJID, *c.Store.ID, types.MessageID(messageID))
+	if _, err := c.SendMessage(ctx, chatJID, revokeMsg); err != nil {
 		return fmt.Errorf("whatsapp_userbot: revoke: %w", err)
 	}
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/gotd/td/tg"
 	"github.com/madmike/go-infra/telemetry"
 	"github.com/madmike/go-messengers/core"
 )
@@ -94,17 +93,3 @@ func (p *Protocol) ListSubChats(ctx context.Context, parentChatID string) ([]cor
 }
 
 // --- Helpers ---
-
-// extractChatIDFromPeer extracts the chat ID from an InputPeerClass.
-func extractChatIDFromPeer(peer tg.InputPeerClass) int64 {
-	switch p := peer.(type) {
-	case *tg.InputPeerUser:
-		return p.UserID
-	case *tg.InputPeerChat:
-		return p.ChatID
-	case *tg.InputPeerChannel:
-		return p.ChannelID
-	default:
-		return 0
-	}
-}
